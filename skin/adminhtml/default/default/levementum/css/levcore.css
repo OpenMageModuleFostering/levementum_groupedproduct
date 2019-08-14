@@ -1,0 +1,5 @@
+
+.form-list td.value .levementum-ordered-multiselect + .note { width: 550px; }
+
+.cart-tax-total { display:block; padding-right:20px; background:url(../images/bkg_collapse.gif) 100% 3px no-repeat; cursor:pointer; }
+.cart-tax-total-expanded { background-position:100% -54px; }

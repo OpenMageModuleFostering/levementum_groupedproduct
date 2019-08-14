@@ -1,0 +1,298 @@
+<?xml version="1.0"?>
+<config>
+    <sections>
+        <levementum_grouped translate="label" module="groupedproduct">
+            <class>separator-top</class>
+            <label>Grouped Products</label>
+            <tab>levementum</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>45</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>0</show_in_store>
+            <groups>
+                <groupedproduct translate="label">
+                    <label>Grouped Product Options</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>100</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <enabled translate="label comment">
+                            <label>Enable GroupedProduct Module</label>
+                            <comment>If disabled default grouped product behavior will be restored.</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </enabled>
+
+                        <displayed_attributes translate="label">
+                            <label>Default Displayed Attributes</label>
+                            <comment><![CDATA[Specify which attributes and in which order these will appear on the grouped product page by default.<br/><br/>If specified on the product that will override this.]]></comment>
+                            <frontend_type>multiselect</frontend_type>
+                            <frontend_class>levementum-ordered-multiselect</frontend_class>
+                            <sort_order>10</sort_order>
+                            <source_model>groupedproduct/system_config_source_attributes</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <can_be_empty>1</can_be_empty>
+                        </displayed_attributes>
+                        <primary_attribute translate="label">
+                            <label>Default Primary Attribute</label>
+                            <comment><![CDATA[The selected column will expand to fill the space, all others will be "minimized"]]></comment>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>11</sort_order>
+                            <source_model>groupedproduct/system_config_source_attributes</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <can_be_empty>1</can_be_empty>
+                            <frontend_model>groupedproduct/adminhtml_system_config_form_field_primary</frontend_model>
+                        </primary_attribute>
+
+                        <allow_all_attributes translate="label comment">
+                            <label>Allow all attributes on table.</label>
+                            <comment><![CDATA[Yes - Allows you to display any attribute of the product in the table.<br/>No - Only allow attributes marked as "Visible on Frontend" to be...visible.]]></comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </allow_all_attributes>
+                        <allow_sort_all_attributes translate="label comment">
+                            <label>Allow sorting by all attributes on table.</label>
+                            <comment>If yes, allows sorting on each attribute.  If no, sorting is controlled by the attributes value of "Used for Sorting in Product Listing".</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </allow_sort_all_attributes>
+                        <default_display_page translate="label comment">
+                            <label>Default Display Page</label>
+                            <comment>Defaults to list if "Grid View" is disabled.</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>groupedproduct/system_config_source_list</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </default_display_page>
+                        <default_page_length_all translate="label comment">
+                            <label>Default Pagination Length</label>
+                            <comment>Display all products on page?</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>groupedproduct/system_config_source_allNumber</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </default_page_length_all>
+                        <default_page_length translate="label comment">
+                            <label>Default Page Listing (Custom)</label>
+                            <comment>Enter the number of items you'd like displayed on the page by default.</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <default_page_length_all>other</default_page_length_all>
+                            </depends>
+                            <validate>validate-digits</validate>
+                        </default_page_length>
+                    </fields>
+                </groupedproduct>
+                <display translate="label">
+                    <label>General Display Options</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>200</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <display_individual_add translate="label">
+                            <label>Display individual product "Add to Cart button"</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </display_individual_add>
+                        <enabled_grid_view translate="label comment">
+                            <label>Enable Grid View</label>
+                            <comment>Enables an alternate Grid View on the grouped product page.  This does not have a client-side sort.  Recommended setting is off.</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </enabled_grid_view>
+                    </fields>
+                </display>
+                <!--<display_grid translate="label">-->
+                <!--<label>Grid Display Options</label>-->
+                <!--<frontend_type>text</frontend_type>-->
+                <!--<sort_order>700</sort_order>-->
+                <!--<show_in_default>1</show_in_default>-->
+                <!--<show_in_website>1</show_in_website>-->
+                <!--<show_in_store>1</show_in_store>-->
+                <!--<fields>-->
+                <!--<information translate="label comment">-->
+                <!--<label>Information Display</label>-->
+                <!--<frontend_type>select</frontend_type>-->
+                <!--<source_model>groupedproduct/system_config_source_datatables</source_model>-->
+                <!--<sort_order>2</sort_order>-->
+                <!--<show_in_default>1</show_in_default>-->
+                <!--<show_in_website>1</show_in_website>-->
+                <!--<show_in_store>1</show_in_store>-->
+                <!--</information>-->
+                <!--<limiter translate="label comment">-->
+                <!--<label>Limiter Display</label>-->
+                <!--<frontend_type>select</frontend_type>-->
+                <!--<source_model>groupedproduct/system_config_source_datatables</source_model>-->
+                <!--<sort_order>3</sort_order>-->
+                <!--<show_in_default>1</show_in_default>-->
+                <!--<show_in_website>1</show_in_website>-->
+                <!--<show_in_store>1</show_in_store>-->
+                <!--</limiter>-->
+                <!--<pagination translate="label comment">-->
+                <!--<label>Pagination Display</label>-->
+                <!--<frontend_type>select</frontend_type>-->
+                <!--<source_model>groupedproduct/system_config_source_datatables</source_model>-->
+                <!--<sort_order>4</sort_order>-->
+                <!--<show_in_default>1</show_in_default>-->
+                <!--<show_in_website>1</show_in_website>-->
+                <!--<show_in_store>1</show_in_store>-->
+                <!--</pagination>-->
+                <!--</fields>-->
+                <!--</display_grid>-->
+                <display_list translate="label">
+                    <label>List View Display Options</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>300</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <information translate="label comment">
+                            <label>Information Display</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>groupedproduct/system_config_source_datatables</source_model>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </information>
+                        <limiter translate="label comment">
+                            <label>Limiter Display</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>groupedproduct/system_config_source_datatables</source_model>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </limiter>
+                        <pagination translate="label comment">
+                            <label>Pagination Display</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>groupedproduct/system_config_source_paginationDisplay</source_model>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <limiter separator=",">both,top,bottom</limiter>
+                            </depends>
+                        </pagination>
+                        <pagination_prepend>
+                            <label>Pagination List Prepend Value</label>
+                            <comment><![CDATA[Prepend the pagination list with this contents.  Accepts HTML, leave blank for empty.  Default is <strong>Page: </strong>]]></comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </pagination_prepend>
+                        <display_first_last translate="label comment">
+                            <label>Display First/Last Pagination Links</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>6</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </display_first_last>
+                    </fields>
+                </display_list>
+                <display_detail translate="label">
+                    <label>Detail View Display Options</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>400</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <information translate="label comment">
+                            <label>Information Display</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>groupedproduct/system_config_source_datatables</source_model>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </information>
+                        <limiter translate="label comment">
+                            <label>Limiter Display</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>groupedproduct/system_config_source_datatables</source_model>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </limiter>
+                        <pagination translate="label comment">
+                            <label>Pagination Display</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>groupedproduct/system_config_source_paginationDisplay</source_model>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <limiter separator=",">both,top,bottom</limiter>
+                            </depends>
+                        </pagination>
+                        <pagination_prepend>
+                            <label>Pagination List Prepend Value</label>
+                            <comment><![CDATA[Prepend the pagination list with this contents.  Accepts HTML, leave blank for empty.  Default is <strong>Page: </strong>]]></comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </pagination_prepend>
+                        <display_first_last translate="label comment">
+                            <label>Display First/Last Pagination Links</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>6</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </display_first_last>
+                    </fields>
+                </display_detail>
+            </groups>
+        </levementum_grouped>
+    </sections>
+</config>

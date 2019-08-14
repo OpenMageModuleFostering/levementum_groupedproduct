@@ -1,0 +1,16 @@
+{
+    "name": "OpenMageModuleFostering/Levementum_Groupedproduct",
+    "type": "magento-module",
+    "license": "Open-Software-License(OSL)",
+    "homepage": "",
+    "description": "Levementum’s Grouped Product Grid extension allows the addition of any attribute in any order with sorting functionality to the grouped product table.",
+    "authors": [
+    {
+        "name": "Levementum, LLC",
+        "email": "gmobisson@levementum.com"
+    }
+],
+    "suggest": {
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}

@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<config>
+    <menu>
+        <levementum translate="title">
+            <children>
+                <levementum_grouped_sets>
+                    <title>GroupedProduct Set Management</title>
+                    <sort_order>20</sort_order>
+                    <action>adminhtml/sets</action>
+                </levementum_grouped_sets>
+            </children>
+        </levementum>
+    </menu>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <levementum>
+                        <children>
+                            <levementum_grouped_sets translate="title">
+                                <title>Grouped Product Set Management</title>
+                                <children>
+                                    <save translate="title">
+                                        <title>Save Set Default Columns</title>
+                                        <sort_order>0</sort_order>
+                                    </save>
+                                </children>
+                            </levementum_grouped_sets>
+                        </children>
+                    </levementum>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <levementum_grouped>
+                                        <title>Levementum GroupedProducts</title>
+                                        <sort_order>1</sort_order>
+                                    </levementum_grouped>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

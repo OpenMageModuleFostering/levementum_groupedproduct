@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<config>
+    <menu>
+        <levementum translate="title" module="levcore">
+            <title>Levementum</title>
+            <sort_order>80</sort_order>
+        </levementum>
+    </menu>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <levementum translate="title" module="levcore">
+                        <title>Levementum Management</title>
+                        <sort_order>80</sort_order>
+                    </levementum>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <levementum>
+                                        <title>Levementum Core</title>
+                                        <sort_order>300</sort_order>
+                                    </levementum>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

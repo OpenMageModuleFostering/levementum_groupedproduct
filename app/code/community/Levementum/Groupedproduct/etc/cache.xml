@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <placeholders>
+        <levementum_grouped>
+            <block>groupedproduct/product_view_type_grouped</block>
+            <placeholder>LEVEMENTUM_GROUPED_TABLE</placeholder>
+            <container>Levementum_Groupedproduct_Model_PageCache_Container_Groupedproduct</container>
+            <cache_lifetime>86400</cache_lifetime>
+        </levementum_grouped>
+    </placeholders>
+</config>

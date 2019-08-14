@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Levementum_Groupedproduct>
+            <active>true</active>
+            <codePool>community</codePool>
+            <depends>
+                <Levementum_LevCore/>
+                <Mage_Catalog/>
+            </depends>
+        </Levementum_Groupedproduct>
+    </modules>
+</config>

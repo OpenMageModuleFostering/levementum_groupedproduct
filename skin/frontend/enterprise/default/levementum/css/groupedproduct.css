@@ -1,0 +1,166 @@
+
+.grouped-table .paging_full_numbers a.paginate_button.paginate_button_disabled { cursor: default; text-decoration: none; }
+/*.sorter .view-mode strong.grid { background:url(../images/levementum/bkg_viewmode.gif) no-repeat 0 0; float:left; width:24px; height:17px; text-align:left; text-indent:-999em; overflow:hidden; margin:2px 0 0; }*/
+
+.grouped-table.grouped-table-list .pager.dataTables_wrapper { padding:0; border-left: 0; border-right: 0;}
+
+.pager .grouped-table-pager { width:250px; margin:0 auto;}
+.pager td.grouped-table-pager {width:50%; text-align: center;}
+.grouped-table-list .toolbar-bottom .sorter { border-top: none; border-bottom: 1px solid #d9d9d9; }
+
+
+.grouped-table .sorter .view-mode a.list-fix,
+.grouped-table .sorter .view-mode a.list,
+.grouped-table .sorter .view-mode strong.list-fix,
+.grouped-table .sorter .view-mode strong.list,
+.grouped-table .sorter .view-mode a.grid-fix,
+.grouped-table .sorter .view-mode a.grid,
+.grouped-table .sorter .view-mode strong.grid-fix,
+.grouped-table .sorter .view-mode strong.grid,
+.grouped-table .sorter .view-mode a.detail-fix,
+.grouped-table .sorter .view-mode a.detail,
+.grouped-table .sorter .view-mode strong.detail-fix,
+.grouped-table .sorter .view-mode strong.detail { background:url(../images/levementum/bkg_viewmode.gif) no-repeat 0 0; float:left; width:23px; height:17px; text-align:left; text-indent:-999em; overflow:hidden; margin:2px 0 -6px; }
+
+.grouped-table .sorter .view-mode a.list { background-position: -48px -116px; }
+.grouped-table .sorter .view-mode strong.list { background-position: -48px -145px; }
+.grouped-table .sorter .view-mode a.grid { background-position: -1px 0px; }
+.grouped-table .sorter .view-mode strong.grid { background-position: -1px -29px; }
+.grouped-table .sorter .view-mode a.detail { background-position: -24px -116px; }
+.grouped-table .sorter .view-mode strong.detail { background-position: -24px -145px; }
+
+.grouped-table .sorter .view-mode a.list.no-grid { background-position: -48px -116px; }
+.grouped-table .sorter .view-mode strong.list.no-grid { background-position: -48px -145px; }
+.grouped-table .sorter .view-mode a.detail.no-grid { background-position: -2px -174px; }
+.grouped-table .sorter .view-mode strong.detail.no-grid { background-position: -2px -203px; }
+
+.grouped-table-list {}
+.grouped-table-grid {}
+.grouped-table-detail {}
+.grouped-table-detail .data-table {  border-collapse:collapse; }
+.grouped-table .data-table {border-left: 0; border-right: 0;}
+.grouped-table-grid .data-table {
+    /*  width: 978px; */
+    margin: 25px 0 0 0 !important;
+    border-top: none;
+    padding: 0 20px;
+    border-right: 0;
+    border-left: 0;
+
+}
+.grouped-table td.sku { width: 20px; white-space: nowrap;}
+.grouped-table table th { vertical-align: bottom; }
+.grouped-table-list .data-table tr:last-child td,
+.grouped-table-list .data-table tr:last-child th,
+.grouped-table-grid .data-table tr:last-child td,
+.grouped-table-grid .data-table tr:last-child th { border-bottom:none; }
+.grouped-table .data-table tbody td {}
+.grouped-table .data-table .data-cell { padding: 0 4px 5px 10px; height: 250px; vertical-align: top;}
+.grouped-table-grid .data-table .data-cell .grid-price { margin: 5px 0 10px 0; }
+.grouped-table-grid .data-table .data-cell .grid-name { }
+.grouped-table-grid .data-table .data-cell .grid-image { margin: 0 0 10px; }
+.grouped-table-grid .data-table .data-cell ul { margin: 0 0 40px 0; }
+.grouped-table .data-table .data-buffer { padding:0 5px; }
+grouped-table .grouped-table-grid .data-table .data-buffer { padding: 5px 12px; }
+.grouped-table .data-table .ul
+.grouped-table-list .box-collateral .box-title { margin:0 0; }
+div.grouped-bottom-product-view {border-top: none; margin-top:-15px; padding-top:20px;}
+div.grouped-bottom-product-view .box-collateral .block-content  { padding:20px; }
+
+.grouped-table .tier-price,
+.grouped-table .sale-price {white-space:nowrap; color:#c73615; font-weight:bold;}
+.grouped-table .original-price { text-decoration:line-through; color:#989696; }
+.grouped-table .price {font-weight:bold;}
+.grouped-table .special-price .price-label { display:none !important; }
+.grouped-table .tier-prices-grouped .price { font-weight:bold; color:#c73615; }
+.grouped-table .add-to-links li { display:inline-block; }
+.grouped-table .add-to-links a { color:#333333; }
+.grouped-table .add-to-cart  { float:right; margin-left: 15px; }
+.grouped-table .add-to-box { text-align: right; }
+.grouped-table .add-to-box .add-to-links { float:right; }
+.grouped-table-list .add-to-box .add-to-links { padding: 0 20px; }
+.groped-product-type { position:relative; z-index:2; margin:20px -30px -20px; background:#fff; border-top:1px solid #cfcfcf; padding:20px 30px 0; }
+.grouped-items-table td { vertical-align: middle; }
+.grouped-table-list .grouped-items-table td { white-space: nowrap; }
+.grouped-table-grid .grouped-items-table td { white-space: normal; }
+.grouped-table-detail .grouped-items-table td { white-space: normal; padding: 0; }
+.grouped-table-detail .grouped-items-table .product-image-cell { padding: 20px 0 20px 20px; }
+.grouped-table-detail .grouped-items-table .product-detail-cell { padding: 20px 20px 20px 19px; vertical-align: top; }
+.grouped-table-detail .product-name { margin-bottom: 5px; }
+.grouped-table-detail .price-box { margin: 5px 0 10px 0; }
+.grouped-table .price-box { font-size: 12px; }
+.grouped-table-detail .desc { margin: 5px 0 10px 0; font-size: 12px; }
+.grouped-table-detail .data-table {}
+.grouped-table-detail .grouped-items-table td.last {display:none; visibility:hidden;}
+
+/* Stock Message Styles For Grouped Product Page */
+.grouped-table .customstatus-additionalinfo { display:none; }
+.grouped-table-list .grouped-items-table td p {margin:0; white-space:pre-line; word-wrap:break-word; line-height:14px;}
+
+
+.grouped-table { width: 100%; }
+.grouped-table .toolbar {
+    margin:15px 0 0;
+}
+
+.grouped-table-list .toolbar {
+    margin: 0;
+}
+
+.grouped-table-detail .toolbar-bottom .toolbar {
+    margin: 0;
+    border-bottom: 1px solid #d9d9d9;
+    border-right: 1px solid #d9d9d9;
+    border-left: 1px solid #d9d9d9;
+}
+
+.grouped-table .old-price .price-label { display:none !important; }
+.grouped-table .toolbar-bottom .toolbar { margin:0 0 15px;}
+.grouped-table-list .toolbar-bottom .toolbar {  }
+
+.grouped-table .thumbnail { width: 120px; height: 28px; }
+.grouped-table img.thumbnail  { height:100%; width:100%; }
+.grouped-table .msrp { color:#9a9a9a; }
+.grouped-table .color { white-space:nowrap; }
+.grouped-table input[type="text"] {margin-bottom:0; }
+.grouped-table-list .add-qty-to-cart .btn-cart { padding:2px 4px; margin-left:5px; }
+
+/*
+ *Custom Data Tables
+ */
+.grouped-table-detail .dataTables_info {padding:3px 20px;}
+
+.grouped-table-list table.dataTable tr.odd td.sorting_1 { background-color: #DDDEF2; }
+.grouped-table-list table.dataTable tr.odd td.sorting_2 { background-color: #DADCFF; }
+.grouped-table-list table.dataTable tr.odd td.sorting_3 { background-color: #E0E2FF; }
+.grouped-table-list table.dataTable tr.even td.sorting_1 { background-color: #EAEBFF; }
+.grouped-table-list table.dataTable tr.even td.sorting_2 { background-color: #F2F3FF; }
+.grouped-table-list table.dataTable tr.even td.sorting_3 { background-color: #F9F9FF; }
+
+.grouped-table-detail .dataTables_wrapper {
+    position: relative;
+    clear: both;
+    margin: 0 0 0 0;
+    border-bottom: none;
+    *zoom: 1;
+}
+.grouped-table-list .table th, .table td { line-height:21px; }
+.grouped-table-list table.dataTable { border-bottom:1px solid #d9d9d9; }
+
+
+.grouped-table-list table.dataTable tr.odd {  }
+.grouped-table-detail table.dataTable tr.even { border-top: 1px solid #d9d9d9; border-bottom: 1px solid #d9d9d9; }
+
+.grouped-table .dataTable-top { background: #f5f5f5 url(../images/levementum/bkg_pager.gif) repeat-x 0 0; height: 26px; }
+.grouped-table .dataTable-bottom { background: #f5f5f5 url(../images/levementum/bkg_pager.gif) repeat-x 0 0; }
+
+.grouped-table-detail .dataTable-top { border-bottom: 1px solid #d9d9d9; }
+
+.grouped-table-list .dataTable-top {}
+
+.grouped-table .dataTable-top div,
+.grouped-table .dataTable-bottom div { width: 280px; text-align: center;}
+.grouped-table .dataTable-top div:first-child,
+.grouped-table .dataTable-bottom div:first-child { text-align: left;}
+
+.grouped-table .dataTable-bottom .dataTables_info { margin-top:3px; }

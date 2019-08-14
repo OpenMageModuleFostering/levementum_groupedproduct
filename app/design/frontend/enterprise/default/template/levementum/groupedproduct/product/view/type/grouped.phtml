@@ -1,0 +1,593 @@
+<?php
+/**
+ * Magento Enterprise Edition
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Magento Enterprise Edition License
+ * that is bundled with this package in the file LICENSE_EE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.magentocommerce.com/license/enterprise-edition
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://www.magentocommerce.com/license/enterprise-edition
+ */
+
+/**
+ * Grouped product data template
+ *
+ * @see Mage_Catalog_Block_Product_View_Media
+ * @see Mage_Catalog_Block_Product_View_Type_Grouped
+ * @var $this Levementum_Groupedproduct_Block_Product_View_Type_Grouped
+ *
+ * ---Begin php doc for variable reference---
+ * @var $this Mage_Catalog_Model_Product
+ * @var $_toolbar Levementum_Groupedproduct_Block_Toolbar
+ */
+
+$_taxHelper  = $this->helper('tax');
+$_outputHelper = $this->helper('catalog/output');
+$_toolbar = $this->getToolbar();
+$_wishlist = $this->helper('wishlist');
+$_groupedHelper = $this->helper('groupedproduct'); /** @var $_groupedHelper Levementum_Groupedproduct_Helper_Data */
+$_configHelper = $this->helper('groupedproduct/config'); /** @var $_configHelper Levementum_Groupedproduct_Helper_Config */
+
+$this->setPreconfiguredValue();
+$_product = $this->getProduct();
+$_associatedProducts = $this->getAssociatedProducts();
+$_associatedProductCount = count($_associatedProducts);
+$_hasAssociatedProducts = $_associatedProductCount > 0;
+$_productTiers = array();
+
+$displayIndividualAddToCart = $_configHelper->displayIndividualAddToCart();
+
+$sortAllAttributes = $_configHelper->allowSortAllAttributes();
+
+//Get Displayed Attributes List
+$displayedAttributes = $_product->getData('lev_displayed_attributes');
+$attributes = $_groupedHelper->getDisplayedAttributeList($displayedAttributes, $_product);
+
+///**determine if some simples are on sale.**/
+$onSale = false;
+$tiered = false;
+/** @var $_associatedProduct Mage_Catalog_Model_Product */
+foreach ($_associatedProducts as $_associatedProduct) {
+    if (!$onSale && (($_associatedProduct->special_price !== null) or ($_associatedProduct->_rule_price !== null))) {
+        //has special price
+        $_simplePricesTax = ($_taxHelper->displayPriceIncludingTax() || $_taxHelper->displayBothPrices());
+        $_price           = $_taxHelper->getPrice($_associatedProduct, $_associatedProduct->getPrice());
+        $_regularPrice    = $_taxHelper->getPrice($_associatedProduct, $_associatedProduct->getPrice(), $_simplePricesTax);
+        $_finalPrice      = $_taxHelper->getPrice($_associatedProduct, $_associatedProduct->getFinalPrice());
+
+        if ($_finalPrice < $_price) {
+            $onSale = true;
+        }
+    }
+
+    if ($_associatedProduct->getTierPriceCount() > 0) {
+        foreach($_associatedProduct->getFormatedTierPrice() as $tier) {
+            if (!isset($_productTiers[$tier['price_qty']]) && $tier['price_qty'] > 1) {
+                $_productTiers[$tier['price_qty']] = $tier['price_qty'];
+                $tiered = true;
+            }
+        }
+    }
+}
+
+//Sort - maintain key=>value pair
+natsort($_productTiers);
+
+$this->setTierPriceTemplate('levementum/groupedproduct/product/view/tierprices-basic.phtml');
+
+Mage::register('grouped-table',true,true);
+
+$_mode = $_toolbar->getCurrentMode();
+$_columnCount = 5;
+
+?>
+<div class="grouped-table grouped-table-<?php echo $_mode; ?>">
+<?php if ($_mode == 'list'): ?>
+<div class="box-collateral">
+    <div class="box-title">
+        <h2><?php echo $this->__('Purchase Items') ?></h2>
+    </div>
+</div>
+    <?php endif;?>
+<form action="<?php echo $this->getSubmitUrl($_product) ?>" method="post" id="grouped-product_addtocart_form">
+<div class="no-display">
+    <input type="hidden" name="product" value="<?php echo $_product->getId() ?>" />
+    <input type="hidden" name="related_product" id="related-products-field" value="" />
+</div>
+<?php echo $this->getChildHtml('product_type_data_extra') ?>
+<?php echo $this->getPagerHtml(); ?>
+<?php if ($_mode == 'grid'): ?>
+<table class="data-table grouped-items-table tablesorter" id="super-product-table">
+    <tbody>
+        <?php if ($_hasAssociatedProducts): ?>
+        <?php $index = 0;?>
+        <?php foreach ($_associatedProducts as $_item): ?>
+            <?php if ($index++ % $_columnCount == 0): ?>
+                    <tr>
+                <?php endif; ?>
+
+            <td class="data-cell">
+                <ul>
+                    <li class="grid-image"><a href="<?php echo $_item->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_item, 'small_image'), null, true) ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($_item, 'small_image')->resize(135); ?>" width="135" height="135" alt="<?php echo $this->stripTags($this->getImageLabel($_item, 'small_image'), null, true) ?>" /></a></li>
+                    <li class="grid-name"><a href="<?php echo $_item->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_item, 'small_image'), null, true) ?>" class="product-name"><?php echo $_item->getName();?></a></li>
+                    <li class="grid-price"><?php echo $this->getPriceHtml($_item, true)?> </li>
+                    <?php if($_product->isSaleable() && $displayIndividualAddToCart): ?>
+                    <li class="grid-addtocart">
+                        <button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_item) ?>')"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button>
+                    </li>
+                    <?php endif; ?>
+                    <li>
+                        <ul class="add-to-links">
+                            <?php if ($_wishlist->isAllow()) : ?>
+                            <li><a href="<?php echo $this->getAddToWishlistUrl($_item) ?>" class="link-wishlist"><?php echo $this->__('Add to Wishlist') ?></a></li>
+                            <?php endif; ?>
+                            <li><span class="separator">|</span> <a href="<?php echo $this->getAddToCompareUrl($_item) ?>" class="link-compare"><?php echo $this->__('Add to Compare') ?></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </td>
+
+            <?php if ($index % $_columnCount != 0): ?>
+                <td class="data-buffer"></td>
+                <?php endif; ?>
+            <?php if ($index % $_columnCount == 0): ?>
+                    </tr>
+                <?php endif; ?>
+            <?php endforeach;?>
+        <?php echo str_repeat('<td>&nbsp;</td>',$_columnCount-$index % $_columnCount); ?>
+        <?php if ($index % $_columnCount != 0): ?>
+            <?php echo '</tr>'; ?>
+            <?php endif; ?>
+        <?php endif;?>
+    </tbody>
+</table>
+
+<script type="text/javascript">decorateTable('super-product-table')</script>
+    <?php elseif ($_mode == 'detail'):  /*Should mimic magento default list view*/ ?>
+<table class="data-table grouped-items-table tablesorter" id="super-product-table">
+    <thead>
+        <tr class="no-display">
+            <th class="no_sort product-image-header"></th>
+            <th class="no_sort product-detail-header"></th>
+            <?php foreach ($attributes as $attribute): ?>
+            <th class="no-display<?php if(!$attribute['used_for_sort_by'] && !$sortAllAttributes):?> no_sort<?php endif;?>" id="grouped-sort-by-<?php echo $attribute['code']?>">
+                <?php echo $this->__($attribute['label'])?>
+            </th>
+            <?php endforeach; ?>
+
+            <th class="no-display" id="grouped-sort-by-msrp"><?php echo $this->__('LIST') ?></th>
+            <th class="a-right" id="grouped-sort-by-price"><?php echo $this->__($_groupedHelper->getPriceLabel()) ?></th>
+            <?php if ($onSale): ?>
+            <th class="no-display "><?php echo $this->__('SALE');?></th>
+            <?php endif;?>
+            <?php if ($tiered): ?>
+            <?php foreach($_productTiers as $tier_qty): ?>
+                <th class="no-display "><?php echo floor($tier_qty);?>+</th>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            <?php if ($_product->getData('lev_display_availability')): ?>
+            <th class="no-display " id="grouped-sort-by-availability"><?php echo $this->__('Availability') ?></th>
+            <?php endif; ?>
+            <th class="no-display <?php if (!$sortAllAttributes):?>no_sort<?php endif;?>"><?php echo $this->__('Qty') ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php if ($_hasAssociatedProducts): ?>
+        <?php foreach ($_associatedProducts as $_item): ?>
+            <?php $_finalPriceInclTax = $this->helper('tax')->getPrice($_item, $_item->getFinalPrice(), true) ?>
+            <tr>
+                <td class="product-image-cell"><a href="<?php echo $_item->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_item, 'small_image'), null, true) ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($_item, 'small_image')->resize(166,166); ?>" width="166" height="166" alt="<?php echo $this->stripTags($this->getImageLabel($_item, 'small_image'), null, true) ?>" /></a></td>
+                <td class="product-detail-cell">
+                    <?php // Product description ?>
+                    <div class="product-shop">
+                        <div class="f-fix">
+                            <?php $_itemNameStripped = $this->stripTags($_item->getName(), null, true); ?>
+                            <h2 class="product-name"><a href="<?php echo $_item->getProductUrl() ?>" title="<?php echo $_itemNameStripped; ?>"><?php echo $_outputHelper->productAttribute($_item, $_item->getName() , 'name'); ?></a></h2>
+                            <?php if($_item->getRatingSummary()): ?>
+                            <?php echo $this->getReviewsSummaryHtml($_item) ?>
+                            <?php endif; ?>
+                            <?php echo $this->getPriceHtml($_item, true) ?>
+                            <div class="desc std">
+                                <?php echo $_outputHelper->productAttribute($_item, $_item->getShortDescription(), 'short_description') ?>
+                                <a href="<?php echo $_item->getProductUrl() ?>" title="<?php echo $_itemNameStripped ?>" class="link-learn"><?php echo $this->__('Learn More') ?></a>
+                            </div>
+
+                            <?php if($_item->isSaleable()): ?>
+                            <?php if ($displayIndividualAddToCart): ?>
+                                <button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_item) ?>')"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button>
+                                <?php endif; ?>
+                            <?php else: ?>
+                            <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+                            <?php endif; ?>
+
+                            <ul class="add-to-links">
+                                <?php if ($this->helper('wishlist')->isAllow()) : ?>
+                                <li><a href="<?php echo $this->helper('wishlist')->getAddUrl($_item) ?>" class="link-wishlist"><?php echo $this->__('Add to Wishlist') ?></a></li>
+                                <?php endif; ?>
+                                <?php if($_compareUrl=$this->getAddToCompareUrl($_item)): ?>
+                                <li><a href="<?php echo $_compareUrl ?>" class="link-compare"><?php echo $this->__('Add to Compare') ?></a></li>
+                                <?php endif; ?>
+                            </ul>
+                        </div>
+                    </div>
+                </td>
+
+                <?php foreach($attributes as $attribute): ?>
+                <td class="no-display <?php echo $attribute['code']?>"><?php echo $_item->getResource()->getAttribute($attribute['code'])->getFrontend()->getValue($_item); ?></td>
+                <?php endforeach; ?>
+
+                <td class="no-display msrp"><?php echo Mage::helper('core')->currency($_taxHelper->getPrice($_item, $_item->getMsrp()),true,false) ?></td>
+                <?php if ($this->getCanShowProductPrice($_product)): ?>
+                <td class="no-display <?php if($onSale): ?> original-price<?php else: ?> price<?php endif;?>"><?php if ($this->getCanShowProductPrice($_item)): ?><?php echo Mage::helper('core')->currency($_taxHelper->getPrice($_item, $_item->getPrice()),true,false) ?><?php endif; ?></td>
+                <?php if($onSale): ?>
+                    <td class="no-display sale-price">
+                        <?php echo Mage::helper('core')->currency($_taxHelper->getPrice($_item, $_item->getFinalPrice()),true,false) ?>
+                    </td>
+                    <?php endif; ?>
+                <?php if($tiered): ?>
+                    <?php foreach ($_productTiers as $tier_qty): ?>
+                        <?php if ($_item->getTierPrice($tier_qty) < $_item->getFinalPrice()): ?>
+                            <td class="no-display tier-price"><?php echo Mage::helper('core')->currency($_taxHelper->getPrice($_item, $_item->getTierPrice($tier_qty)),true,false) ?></td>
+                            <?php else: ?>
+                            <td class="no-display "></td>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                <?php endif; ?>
+
+                <?php if ($_product->getData('lev_display_availability')): ?>
+                <td class="no-display">
+                    <?php if ($_item->isSaleable()) : ?>
+                    <p class="availability in-stock"><span><?php echo $this->__('In stock') ?></span></p>
+                    <?php else: ?>
+                    <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+                    <?php endif; ?>
+                </td>
+                <?php endif; ?>
+                <td><input type="text" name="super_group[<?php echo $_item->getId() ?>]" maxlength="12"
+                           value="<?php echo $_item->getQty() * 1 ?>" title="<?php echo $this->__('Qty') ?>"
+                           class="no-display input-text qty"/></td>
+            </tr>
+            <?php endforeach; ?>
+        <?php endif;?>
+    </tbody>
+</table>
+    <?php else: /* if ($_mode == 'list') */ ?>
+<table class="data-table grouped-items-table table table-bordered tablesorter" id="super-product-table">
+    <colgroup>
+        <?php  foreach ($attributes as $attribute): ?>
+        <?php if ($attribute['primary']): ?>
+            <col />
+            <?php else: ?>
+            <col width="1"/>
+            <?php endif; ?>
+        <?php endforeach; ?>
+        <?php
+        $extraCols = 1;
+        if ($this->getCanShowProductPrice($_product)) {
+            $extraCols += 1 + ($onSale ? 1 : 0) + count($_productTiers);
+        }
+
+        //If can display availability, add 1
+        $extraCols += ($_product->getData('lev_display_availability') ? 1 : 0);
+
+        $extraCols += (($_product->getData('lev_display_qty')) ? 1 : 0); //increment one for 'qty' field.
+
+        echo str_repeat('<col width="1" />',$extraCols);
+        ?>
+    </colgroup>
+    <thead>
+        <tr>
+            <?php foreach ($attributes as $attribute): ?>
+            <th class="a-left<?php if(!$attribute['used_for_sort_by'] && !$sortAllAttributes):?> no_sort<?php endif;?>" id="grouped-sort-by-<?php echo $attribute['code']?>">
+                <?php echo str_ireplace(' ','&nbsp;',$this->__($attribute['label']))?>
+            </th>
+            <?php endforeach; ?>
+
+            <?php if ($this->getCanShowProductPrice($_product)): ?>
+            <th class="a-right" id="grouped-sort-by-price"><?php echo $this->__($_groupedHelper->getPriceLabel()) ?></th>
+
+            <?php if ($onSale): ?>
+                <th class="a-right"><?php echo $this->__('SALE');?></th>
+                <?php endif;?>
+            <?php if ($tiered): ?>
+                <?php foreach($_productTiers as $tier_qty): ?>
+                    <th class="a-right"><?php echo floor($tier_qty);?>+</th>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            <?php endif; ?>
+            <?php if ($_product->getData('lev_display_qty')):?>
+            <th class="a-left"><?php echo $this->__('Qty Available') ?></th>
+            <?php endif; ?>
+            <?php if ($_product->getData('lev_display_availability')): ?>
+            <th class="a-right" id="grouped-sort-by-availability">Availability</th>
+            <?php endif; ?>
+            <th class="a-center no_sort last"><?php echo $this->__('Add Qty To Cart') ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php if ($_hasAssociatedProducts): ?>
+        <?php foreach ($_associatedProducts as $_item): ?>
+            <?php $_finalPriceInclTax = $this->helper('tax')->getPrice($_item, $_item->getFinalPrice(), true) ?>
+            <tr>
+                <?php foreach($attributes as $attribute): ?>
+                <?php if ($_item->getResource()->getAttribute($attribute['code'])->getBackendModel() == 'catalog/product_attribute_backend_price'): ?>
+                    <?php if ($attribute['code'] == 'price'): ?>
+                        <?php if ($this->getCanShowProductPrice($_product)): ?>
+                            <td class="a-right <?php if($onSale): ?> original-price<?php else: ?> price<?php endif;?>"><?php if ($this->getCanShowProductPrice($_item)): ?><?php echo Mage::helper('core')->currency($_taxHelper->getPrice($_item, $_item->getPrice()),true,false) ?><?php endif; ?></td>
+                            <?php if($onSale): ?>
+                                <td class="a-right sale-price">
+                                    <?php echo Mage::helper('core')->currency($_taxHelper->getPrice($_item, $_item->getFinalPrice()),true,false) ?>
+                                </td>
+                                <?php endif; ?>
+                            <?php if($tiered): ?>
+                                <?php foreach ($_productTiers as $tier_qty): ?>
+                                    <?php if ($_item->getTierPrice($tier_qty) < $_item->getFinalPrice()): ?>
+                                        <td class="a-right tier-price"><?php echo Mage::helper('core')->currency($_taxHelper->getPrice($_item, $_item->getTierPrice($tier_qty)),true,false) ?></td>
+                                        <?php else: ?>
+                                        <td></td>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            <?php endif;?>
+                        <?php else: ?>
+                        <td class="<?php echo $attribute['code']?>"><?php echo Mage::helper('core')->currency($_item->getResource()->getAttribute($attribute['code'])->getFrontend()->getValue($_item)); ?></td>
+                        <?php endif;?>
+                    <?php elseif ($_item->getResource()->getAttribute($attribute['code'])->getFrontendInput() == 'media_image'): ?>
+                            <td class="<?php echo $attribute['code']?>">
+                                <?php echo '<img src="'.$this->helper('catalog/image')->init($_item, $attribute['code'])->resize(35,35).'" width="35" height="35" alt="'.$this->htmlEscape($_item->getImageLabel()).'" title="'.$this->htmlEscape($_item->getImageLabel()).'" />';?>
+                    <?php else: ?>
+                    <td class="<?php echo $attribute['code']?>"><?php echo $_item->getResource()->getAttribute($attribute['code'])->getFrontend()->getValue($_item); ?></td>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+
+                <?php if ($this->getCanShowProductPrice($_product)): ?>
+                <td class="a-right <?php if($onSale): ?> original-price<?php else: ?> price<?php endif;?>"><?php if ($this->getCanShowProductPrice($_item)): ?><?php echo Mage::helper('core')->currency($_taxHelper->getPrice($_item, $_item->getPrice()),true,false) ?><?php endif; ?></td>
+                <?php if($onSale): ?>
+                    <td class="a-right sale-price">
+                        <?php echo Mage::helper('core')->currency($_taxHelper->getPrice($_item, $_item->getFinalPrice()),true,false) ?>
+                    </td>
+                    <?php endif; ?>
+                <?php if($tiered): ?>
+                    <?php foreach ($_productTiers as $tier_qty): ?>
+                        <?php if ($_item->getTierPrice($tier_qty) < $_item->getFinalPrice()): ?>
+                            <td class="a-right tier-price"><?php echo Mage::helper('core')->currency($_taxHelper->getPrice($_item, $_item->getTierPrice($tier_qty)),true,false) ?></td>
+                            <?php else: ?>
+                            <td>&nbsp;</td>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                <?php endif; ?>
+
+                <?php if ($_product->getData('lev_display_qty')):?>
+                <td class="qty"><?php echo $_item->getStockItem()->getQty()*1 ?></td>
+                <?php endif; ?>
+                <?php if ($_product->getData('lev_display_availability')): ?>
+                <td class="a-center">
+                    <?php if ($_item->isSaleable()) : ?>
+                    <p class="availability in-stock"><span><?php echo $this->__('In stock') ?></span></p>
+                    <?php else: ?>
+                    <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+                    <?php endif; ?>
+                </td>
+                <?php endif; ?>
+                <td class="a-center"><input type="text" name="super_group[<?php echo $_item->getId() ?>]" id="super_group_<?php echo $_item->getId() ?>" maxlength="12"
+                                            value="<?php echo $_item->getQty() * 1 ?>" title="<?php echo $this->__('Qty') ?>"
+                                            class="input-text qty"/>
+                    <?php if ($displayIndividualAddToCart): ?>
+                        <span class="add-qty-to-cart"><button onclick="setLocation('<?php echo Mage::getUrl('checkout/cart/add', array('product' => $_item->getId())) ?>qty/'+jQuery('#super_group_<?php echo $_item->getId() ?>').val()+'/')" class="btn btn-success btn-cart" title="Add to Cart" type="button"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button></span>
+                        <?php endif; ?>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        <?php else: ?>
+        <tr>
+            <td colspan="<?php echo ($_product->isSaleable() ?  4 : 3) ?>"><?php echo $this->__('No options of this product are available.') ?></td>
+        </tr>
+        <?php endif; ?>
+    </tbody>
+</table>
+    <?php endif; /* endif ($_mode == 'list') */?>
+
+<div class="toolbar-bottom">
+    <?php echo $this->getPagerHtml(); ?>
+</div>
+
+<?php if ($_mode != 'grid'): ?>
+<script type="text/javascript">
+    var dataTable;
+
+        <?php
+        /* Default values for drop down*/
+        $aLengthValues = array(10, 25, 50);
+        $aLengthLabels = array('10', '25', '50');
+        $all_found = false;
+        $index = 0;
+
+        /* Calculate from available limits */
+        foreach ($_toolbar->getAvailableLimit() as $_key=> $_limit) {
+            if ($index++ == 0) {
+                $aLengthValues = array();
+                $aLengthLabels = array();
+            }
+
+            if ($_key == 'all') {
+                $_key = -1;
+                $all_found = true;
+            }
+
+            array_push($aLengthValues, $_key);
+            array_push($aLengthLabels, '\'' . $_limit . '\'');
+        }
+
+        if ($_configHelper->getDefaultPageLengthAll($_mode) == 'other' && $_configHelper->getDefaultPageLength()) {
+            $defaultDisplayLength = $_configHelper->getDefaultPageLength();
+            if (!in_array($defaultDisplayLength,$aLengthValues)) {
+                array_push($aLengthValues, $defaultDisplayLength);
+                array_push($aLengthLabels, '\'' . $defaultDisplayLength . '\'');
+            }
+        } else {
+            $defaultDisplayLength = -1;
+        }
+
+        if (!$all_found) {
+            array_push($aLengthValues, -1);
+            array_push($aLengthLabels, '\'all\'');
+        }
+        $aLengthMenu = '[[' . implode(', ', $aLengthValues) . '], [' . implode(', ', $aLengthLabels) . ']]';
+        ?>
+
+    jQuery(document).ready(function () {
+        var aoColumns = [];
+        jQuery('#super-product-table thead th').each( function () {
+            if ( jQuery(this).hasClass( 'no_sort' )) {
+                aoColumns.push( { "bSortable": false } );
+            } else {
+                aoColumns.push( null );
+            }
+        });
+
+        <?php if ($_hasAssociatedProducts): ?>
+            <?php if (!$_configHelper->displayFirstLast($_mode)):?>
+                jQuery.fn.dataTableExt.oStdClasses.sPageFirst = "no-display";
+                jQuery.fn.dataTableExt.oStdClasses.sPageLast = "no-display";
+                <?php endif; ?>
+
+            jQuery.fn.dataTableExt.oStdClasses.sPagePrevious = "previous i-previous";
+            jQuery.fn.dataTableExt.oStdClasses.sPageNext = "next i-next";
+            jQuery.fn.dataTableExt.oStdClasses.sPaging = "pages dataTables_paginate paging_";
+            jQuery.fn.dataTableExt.oStdClasses.sWrapper = "pager dataTables_wrapper";
+            jQuery.fn.dataTableExt.oStdClasses.sPageButtonActive = "current paginate_button";
+            jQuery.fn.dataTableExt.oStdClasses.sSortColumn = "sorting_";
+            dataTable = jQuery('#super-product-table').dataTable({
+                                                                     "fnDrawCallback": function( oSettings ) {
+                                                                         var displayedRowCount = this[0].rows.length-1;
+                                                                         jQuery.each(this[0].rows, function() {
+                                                                             this.removeClassName('first');
+                                                                             this.removeClassName('last');
+                                                                         });
+                                                                         this[0].rows[1].addClassName('first');
+                                                                         this[0].rows[displayedRowCount].addClassName('last');
+                                                                     },
+                                                                     <?php
+                                                                     /*
+                                                                     * i = information
+                                                                     * p = pagination
+                                                                     * l = limiter
+                                                                     */
+                                                                     ?>
+                                                                     "sDom": '<?php echo $_groupedHelper->getToolbarSDom($_mode);?>',
+                                                                     "sPaginationType":"full_numbers",
+                                                                     "bProcessing":true,
+                                                                     "bFilter":false,
+                                                                     "iDisplayLength":<?php echo $defaultDisplayLength?>,
+                                                                     "oLanguage":{
+                                                                         "sLengthMenu":"Show _MENU_ per page",
+                                                                         "sInfo": "Items _START_ - _END_ of _TOTAL_",
+                                                                         "sInfoEmpty": "Items 0 to 0 of 0",
+                                                                         "oPaginate":{
+                                                                             "sNext":'<img src="<?php echo $this->getSkinUrl('images/pager_arrow_right.gif') ?>" alt="Go to Next page" class="arrow"/>',
+                                                                             "sPrevious":'<img src="<?php echo $this->getSkinUrl('images/pager_arrow_left.gif') ?>" alt="Go to Previous page" class="arrow"/>'
+                                                                         }
+                                                                     },
+                                                                     "aLengthMenu": <?php echo $aLengthMenu;?>,
+                                                                     "aoColumns": aoColumns
+                                                                 });
+            jQuery('.grouped-table .dataTables_paginate').prepend('<?php echo str_ireplace("'","\'",$_configHelper->getPaginationPrepend($_mode));?>');
+            <?php endif; ?>
+    });
+
+        <?php
+        /* Change ian.c on 6/30/12 at 11:08 AM
+         * Description: This function connects the dropdown in the toolbar.phtml file to the datatable.
+         */
+        ?>
+    function groupedTableSort(column_index, select) {
+        dataTable.fnSort([
+                             [column_index, 'asc']
+                         ]);
+        jQuery('.grouped-select').val(select.value);
+    }
+</script>
+    <?php endif; ?>
+
+<?php
+/*
+ * Add to cart for product list.
+ */
+?>
+<?php if ($_mode == 'list'): ?>
+
+<script type="text/javascript">
+    //<![CDATA[
+    var groupedProductAddToCartForm = new VarienForm('grouped-product_addtocart_form');
+
+
+    groupedProductAddToCartForm.submit = function(button, url) {
+        if (this.validator.validate()) {
+            var form = this.form;
+            var oldUrl = form.action;
+
+            if (url) {
+                form.action = url;
+            }
+            var e = null;
+            try {
+                this.form.submit();
+            } catch (e) {
+            }
+            this.form.action = oldUrl;
+            if (e) {
+                throw e;
+            }
+
+            if (button && button != 'undefined') {
+                button.disabled = true;
+            }
+        }
+    }.bind(groupedProductAddToCartForm);
+
+    groupedProductAddToCartForm.submitLight = function(button, url){
+        if(this.validator) {
+            var nv = Validation.methods;
+            delete Validation.methods['required-entry'];
+            delete Validation.methods['validate-one-required'];
+            delete Validation.methods['validate-one-required-by-name'];
+            /* Remove custom datetime validators*/
+            for (var methodName in Validation.methods) {
+                if (methodName.match(/^validate-datetime-.*/i)) {
+                    delete Validation.methods[methodName];
+                }
+            }
+
+            if (this.validator.validate()) {
+                if (url) {
+                    this.form.action = url;
+                }
+                this.form.submit();
+            }
+            Object.extend(Validation.methods, nv);
+        }
+    }.bind(groupedProductAddToCartForm);
+    //]]>
+</script>
+    <?php endif;?>
+<?php echo $this->getChildHtml('addtocart');?>
+</form>
+</div>
+<?php Mage::unregister('grouped-table'); ?>
