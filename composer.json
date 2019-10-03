@@ -1,7 +1,7 @@
 {
-    "name": "OpenMageModuleFostering\/Levementum_Groupedproduct",
+    "name": "openmage-module-fostering\/levementum_groupedproduct",
     "type": "magento-module",
-    "license": "Open-Software-License(OSL)",
+    "license": "OSL-3.0",
     "homepage": "",
     "description": "Levementum\u2019s Grouped Product Grid extension allows the addition of any attribute in any order with sorting functionality to the grouped product table.",
     "authors": [
